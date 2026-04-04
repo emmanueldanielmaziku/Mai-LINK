@@ -9,11 +9,12 @@ datasource db {
 
 
 model Business {
-  id Int @id @default(autoincrement())
+  id String @id @default(uuid())
   businessName String
-  businessNumber Int @unique
+  businessNumber String
+  businessNumberHash String @unique
   businessNetwork String
-  businessCode Int
+  businessCode String
   link PaymentLink[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -21,17 +22,17 @@ model Business {
 
 
 model PaymentLink {
-  id Int @id @default(autoincrement())
+  id String @id @default(uuid())
   amount Int
   business Business @relation(fields: [businessId],references: [id] )
-  businessId Int
+  businessId String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model LipaNumber {
-  id Int @id @default(autoincrement())
+  id String @id @default(uuid())
   businessName String
-  businessNumber Int @unique
+  businessNumber String @unique
   network String
 }
