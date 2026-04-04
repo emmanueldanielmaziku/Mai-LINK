@@ -1,0 +1,37 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+
+model Business {
+  id Int @id @default(autoincrement())
+  businessName String
+  businessNumber Int @unique
+  businessNetwork String
+  businessCode Int
+  link PaymentLink[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+
+model PaymentLink {
+  id Int @id @default(autoincrement())
+  amount Int
+  business Business @relation(fields: [businessId],references: [id] )
+  businessId Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model LipaNumber {
+  id Int @id @default(autoincrement())
+  businessName String
+  businessNumber Int @unique
+  network String
+}
