@@ -62,12 +62,19 @@ business.post("/signin", async (c) => {
 
   const response = await auth.signIn(result.data);
 
+
   if (!response.success) {
     return c.json({ success: false, error: response.error }, 409);
   }
 
-  
+  const payload = {
+    id: response.data?.id,
+    business_number: response.data?.businessNumber,
+    exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24,
+  };
 
-  return c.json({ success: true, data: response.data }, 201);
+  const token = await sign(payload, JWT_SECRET, JWT_ALG)
+
+  return c.json({ success: true, data: response.data, token }, 201);
 });
 export default business;
