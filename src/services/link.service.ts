@@ -1,9 +1,9 @@
 import { prisma } from "../lib/prisma";
 
-export async function generateLink(
+export async function generateLinkCode(
   amount: number,
   businessId: string,
-  link: string,
+  code: string,
   idempotencyKey: string,
 ) {
   const existingKey = await prisma.paymentLink.findUnique({
@@ -14,7 +14,7 @@ export async function generateLink(
     return { success: false, error: "⚠️ Duplicated request!" };
   }
   const existingLink = await prisma.paymentLink.findUnique({
-    where: { link },
+    where: { code },
   });
 
   if (existingLink) {
@@ -23,7 +23,7 @@ export async function generateLink(
   const paylink = await prisma.paymentLink.create({
     data: {
       amount: amount,
-      link: link,
+      code: code,
       idempotencyKey: idempotencyKey,
       business: {
         connect: { id: businessId },

@@ -1,4 +1,4 @@
-export function generatePaymentLink(): string {
+export function generatePaymentCode(): string {
   const chars = "abcdefghijklmnopqrstuvwxyz";
   const link = Bun.env.BASE_URL;
   const rand = (n: number) =>
@@ -7,5 +7,5 @@ export function generatePaymentLink(): string {
       () => chars[Math.floor(Math.random() * chars.length)],
     ).join("");
 
-  return `${link}/${rand(3)}-${rand(4)}-${rand(3)}`;
+  return `${rand(3)}-${rand(4)}-${rand(3)}`;
 }

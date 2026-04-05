@@ -27,7 +27,7 @@ model PaymentLink {
   business Business @relation(fields: [businessId],references: [id] )
   businessId String
   status STATUS @default(PENDING)
-  link String @unique
+  code String @unique
   idempotencyKey String @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
