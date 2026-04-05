@@ -71,4 +71,5 @@ async function signIn(body: Auth) {
   };
 
 }
+
 export default { signUp, signIn };

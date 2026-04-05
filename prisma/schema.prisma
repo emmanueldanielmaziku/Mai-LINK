@@ -26,13 +26,23 @@ model PaymentLink {
   amount Int
   business Business @relation(fields: [businessId],references: [id] )
   businessId String
+  status STATUS @default(PENDING)
+  link String @unique
+  idempotencyKey String @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
 
 model LipaNumber {
   id String @id @default(uuid())
   businessName String
   businessNumber String @unique
   network String
+}
+
+
+enum STATUS {
+   PENDING
+   PAID
 }

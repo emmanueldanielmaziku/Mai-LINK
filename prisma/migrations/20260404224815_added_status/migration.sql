@@ -1,0 +1,5 @@
+-- CreateEnum
+CREATE TYPE "STATUS" AS ENUM ('PENDING', 'PAID');
+
+-- AlterTable
+ALTER TABLE "PaymentLink" ADD COLUMN     "status" "STATUS" NOT NULL DEFAULT 'PENDING';
