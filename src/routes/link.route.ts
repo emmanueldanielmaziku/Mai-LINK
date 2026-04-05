@@ -2,7 +2,8 @@ import { Hono } from "hono";
 import { LinkSchema } from "../validators/link.validator";
 import { AuthVariables } from "../middleware/auth.middleware";
 import { generateLink } from "../services/link.service";
-import { success } from "zod";
+import { generatePaymentLink } from "../lib/code";
+
 
 const link = new Hono<{ Variables: AuthVariables }>();
 
@@ -34,11 +35,13 @@ link.post("/generate", async (c) => {
     );
   }
 
+  const link = generatePaymentLink();
+
   const response = await generateLink(
     result.data.amount,
     payload.id,
-    "https:localhost:8000/ystyay",
-    idempotencyKey
+    link,
+    idempotencyKey,
   );
   if (!response.success) {
     return c.json({ success: false, error: response.error }, 409);
