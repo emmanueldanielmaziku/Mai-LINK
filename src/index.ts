@@ -1,19 +1,20 @@
 import { Hono } from "hono";
 import authRouter from "./routes/auth.route";
-import payRouter from "./routes/pay.route"
+import payRouter from "./routes/pay.route";
 import linkRouter from "./routes/link.route";
 import { authMiddleware, AuthVariables } from "./middleware/auth.middleware";
 
-const app = new Hono<{ Variables: AuthVariables }>().basePath("/v1");
-app.use("/api/link/*", authMiddleware);
-app.use("/pay/*", authMiddleware);
+const app = new Hono<{ Variables: AuthVariables }>();
+const root = new Hono();
 
-//Routes
-app.route("/api/auth", authRouter);
-app.route("/api/link", linkRouter);
-app.route("/pay", payRouter);
+app.use("/link/*", authMiddleware);
+app.route("/auth", authRouter);
+app.route("/link", linkRouter);
+
+root.route("/v1/api", app);
+root.route("/", payRouter);
 
 export default {
   port: Bun.env.PORT,
-  fetch: app.fetch,
+  fetch: root.fetch,
 };

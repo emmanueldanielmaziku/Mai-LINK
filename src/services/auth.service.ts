@@ -1,6 +1,6 @@
 import { encrypt, decrypt } from "../lib/encryption";
 import { hashForSearch } from "../lib/hash";
-import { prisma } from "../lib/prisma";
+import { prisma } from "../db/prisma";
 import { Auth } from "../validators/auth.validator";
 import { Business } from "../validators/business.validator";
 
@@ -62,14 +62,12 @@ async function signIn(body: Auth) {
     return { success: false, error: "Oops 🙊, Wrong Credentials!" };
   }
 
-  
   const decryptedBusinessNumber = await decrypt(result.businessNumber);
   const { businessCode, businessNumberHash, ...data } = result;
   return {
     success: true,
     data: { ...data, businessNumber: decryptedBusinessNumber },
   };
-
 }
 
 export default { signUp, signIn };

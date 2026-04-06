@@ -2,7 +2,7 @@ import { Hono } from "hono";
 import { BusinessSchema } from "../validators/business.validator";
 import auth from "../services/auth.service";
 import { AuthSchema } from "../validators/auth.validator";
-import { AuthVariables, JWT_ALG, JWT_SECRET } from "../middleware/auth.middleware";
+import {  JWT_ALG, JWT_SECRET } from "../middleware/auth.middleware";
 import { sign } from "hono/jwt";
 
 const business = new Hono();
