@@ -37,7 +37,7 @@ model PaymentLink {
 model LipaNumber {
   id String @id @default(uuid())
   businessName String
-  businessNumber String @unique
+  businessNumber Int @unique
   network String
 }
 

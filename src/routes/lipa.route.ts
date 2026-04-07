@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { LipaSchema } from "../validators/lipa.validator";
 import lipaService from "../services/lipa.service";
-import { json } from "zod";
+
 
 const lipa = new Hono();
 
