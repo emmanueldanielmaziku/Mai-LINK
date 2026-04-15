@@ -1,11 +1,26 @@
 import { Hono } from "hono";
 import { LinkSchema } from "../validators/link.validator";
 import { AuthVariables } from "../middleware/auth.middleware";
-import { generateLinkCode } from "../services/link.service";
+import {
+  deleteBusinessLink,
+  generateLinkCode,
+  listBusinessLinks,
+} from "../services/link.service";
 import { generatePaymentCode } from "../lib/link.generator";
 
 
 const link = new Hono<{ Variables: AuthVariables }>();
+
+link.get("/", async (c) => {
+  const payload = c.get("jwtPayload");
+  const response = await listBusinessLinks(payload.id);
+
+  if (!response.success) {
+    return c.json({ success: false, error: response.error }, 409);
+  }
+
+  return c.json({ success: true, data: response.data }, 200);
+});
 
 link.post("/generate", async (c) => {
   const body = await c.req.json();
@@ -17,8 +32,6 @@ link.post("/generate", async (c) => {
       { success: false, error: "⚠️ Oops! Idempotency-Key header is required" },
       400,
     );
-  } else {
-
   }
 
   const result = LinkSchema.safeParse(body);
@@ -47,12 +60,28 @@ link.post("/generate", async (c) => {
     return c.json({ success: false, error: response.error }, 409);
   }
   const payBaseUrl = (Bun.env.PAY_BASE_URL ?? "").replace(/\/$/, "");
-  return c.json({ success: true, 
+  return c.json({
+    success: true,
     data: {
-        ...response.data,
-        code: `${payBaseUrl}/${code}`
-    }
-}, 201);
+      ...response.data,
+      code: `${payBaseUrl}/${code}`,
+    },
+  }, 201);
+});
+
+link.delete("/:id", async (c) => {
+  const payload = c.get("jwtPayload");
+  const id = c.req.param("id");
+
+  const response = await deleteBusinessLink(id, payload.id);
+  if (!response.success) {
+    return c.json({ success: false, error: response.error }, 404);
+  }
+
+  return c.json(
+    { success: true, message: "✅ Payment link deleted successfully." },
+    200,
+  );
 });
 
 export default link;

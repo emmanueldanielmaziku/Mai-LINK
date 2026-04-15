@@ -178,7 +178,7 @@ or
     "amount": 5000,
     "businessId": "business_uuid",
     "status": "PENDING",
-    "code": "ABCDEFGH",
+    "code": "https://mai-link-production.up.railway.app/ABCDEFGH",
     "idempotencyKey": "client-generated-key",
     "createdAt": "2026-04-15T08:00:00.000Z",
     "updatedAt": "2026-04-15T08:00:00.000Z"
@@ -239,7 +239,71 @@ or
 
 ---
 
-## 4) Add Lipa Number
+## 4) List My Payment Links (Protected)
+
+**Endpoint**  
+`GET https://mai-link-production.up.railway.app/v1/api/link`
+
+**Headers**
+- `Authorization: Bearer <jwt_token>` (required)
+
+**Success (200)**
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "id": "uuid",
+      "amount": 5000,
+      "businessId": "business_uuid",
+      "status": "PENDING",
+      "code": "ABCDEFGH",
+      "idempotencyKey": "client-generated-key",
+      "createdAt": "2026-04-15T08:00:00.000Z",
+      "updatedAt": "2026-04-15T08:00:00.000Z"
+    }
+  ]
+}
+```
+
+**Fail - Unauthorized JWT (401)**
+- Invalid/missing bearer token is handled by Hono JWT middleware.
+
+---
+
+## 5) Delete My Payment Link (Protected)
+
+**Endpoint**  
+`DELETE https://mai-link-production.up.railway.app/v1/api/link/{id}`
+
+**Headers**
+- `Authorization: Bearer <jwt_token>` (required)
+
+**Path params**
+- `id` (string): payment link id
+
+**Success (200)**
+```json
+{
+  "success": true,
+  "message": "✅ Payment link deleted successfully."
+}
+```
+
+**Fail - Not Found (404)**
+```json
+{
+  "success": false,
+  "error": "⚠️ Payment link not found."
+}
+```
+
+**Fail - Unauthorized JWT (401)**
+- Invalid/missing bearer token is handled by Hono JWT middleware.
+
+---
+
+## 6) Add Lipa Number
 
 **Endpoint**  
 `POST https://mai-link-production.up.railway.app/v1/api/lipa`
@@ -294,7 +358,7 @@ or
 
 ---
 
-## 5) Get Lipa Number Details
+## 7) Get Lipa Number Details
 
 **Endpoint**  
 `GET https://mai-link-production.up.railway.app/v1/api/lipa/{lnumber}`
@@ -325,7 +389,7 @@ or
 
 ---
 
-## 6) Open Public Payment Page by Link Code
+## 8) Open Public Payment Page by Link Code
 
 **Endpoint**  
 `GET https://mai-link-production.up.railway.app/{code}`
@@ -343,7 +407,7 @@ or
 
 ---
 
-## 7) Initiate Payment by Code (Phone from User)
+## 9) Initiate Payment by Code (Phone from User)
 
 **Endpoint**  
 `POST https://mai-link-production.up.railway.app/pay/{code}`
