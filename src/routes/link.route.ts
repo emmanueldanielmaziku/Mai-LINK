@@ -46,10 +46,11 @@ link.post("/generate", async (c) => {
   if (!response.success) {
     return c.json({ success: false, error: response.error }, 409);
   }
+  const payBaseUrl = (Bun.env.PAY_BASE_URL ?? "").replace(/\/$/, "");
   return c.json({ success: true, 
     data: {
         ...response.data,
-        code: `${Bun.env.PAY_BASE_URL}/pay/${code}`
+        code: `${payBaseUrl}/${code}`
     }
 }, 201);
 });

@@ -1,7 +1,7 @@
 const snippe_base_url = Bun.env.SNIPPE_BASE_URL;
 const snippe_api_key = Bun.env.SNIPPE_API_KEY;
 
-async function initiatePayment(payment: any) {
+async function initiatePayment(payment: any, phoneNumber: string) {
   const body = JSON.stringify({
     payment_type: "mobile",
     details: {
@@ -9,8 +9,7 @@ async function initiatePayment(payment: any) {
       currency: "TZS",
     },
 
-    // phone_number: "255634561154",
-    phone_number: "255758376759",
+    phone_number: phoneNumber,
 
     customer: {
       firstname: "Emmanuel",

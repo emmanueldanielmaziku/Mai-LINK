@@ -178,7 +178,7 @@ or
     "amount": 5000,
     "businessId": "business_uuid",
     "status": "PENDING",
-    "code": "https://mai-link-production.up.railway.app/pay/ABCDEFGH",
+    "code": "https://mai-link-production.up.railway.app/ABCDEFGH",
     "idempotencyKey": "client-generated-key",
     "createdAt": "2026-04-15T08:00:00.000Z",
     "updatedAt": "2026-04-15T08:00:00.000Z"
@@ -325,13 +325,38 @@ or
 
 ---
 
-## 6) Verify/Trigger Payment by Link Code
+## 6) Open Public Payment Page by Link Code
 
 **Endpoint**  
-`GET https://mai-link-production.up.railway.app/pay/{code}`
+`GET https://mai-link-production.up.railway.app/{code}`
 
 **Path params**
 - `code` (string): payment code generated from `/v1/api/link/generate`
+
+**Behavior**
+- Opens a payment page for end users.
+- User enters phone number and taps Pay.
+- Payment page sends `POST /pay/{code}` internally.
+
+**Backward compatibility**
+- `GET https://mai-link-production.up.railway.app/pay/{code}` is also supported.
+
+---
+
+## 7) Initiate Payment by Code (Phone from User)
+
+**Endpoint**  
+`POST https://mai-link-production.up.railway.app/pay/{code}`
+
+**Path params**
+- `code` (string): payment code generated from `/v1/api/link/generate`
+
+**Body**
+```json
+{
+  "phone_number": "255758376759"
+}
+```
 
 **Success (200)**
 ```json
@@ -347,23 +372,42 @@ or
 }
 ```
 
-Note: returned `data` is whatever the external payment provider returns.
+Note: returned `data` wraps provider response payload.
 
-**Fail - Invalid link (200)**
+**Fail - Missing phone (400)**
 ```json
 {
   "success": false,
-  "data": "⚠️ Oops! Invalid payment link."
+  "error": "⚠️ Phone number is required."
 }
 ```
 
-**Fail - Already paid (200)**
+**Fail - Invalid phone (400)**
 ```json
 {
   "success": false,
-  "data": "💰 This payment has already been completed! If you have any concerns, please contact the business. 🙏"
+  "error": "⚠️ Please enter a valid phone number."
 }
 ```
+
+**Fail - Invalid link (400)**
+```json
+{
+  "success": false,
+  "error": "⚠️ Oops! Invalid payment link."
+}
+```
+
+**Fail - Already paid (400)**
+```json
+{
+  "success": false,
+  "error": "💰 This payment has already been completed! If you have any concerns, please contact the business. 🙏"
+}
+```
+
+**Backward compatibility**
+- `POST https://mai-link-production.up.railway.app/{code}` is also supported.
 
 ---
 
@@ -371,6 +415,6 @@ Note: returned `data` is whatever the external payment provider returns.
 
 - Save `token` from signup/signin and send it in `Authorization` header for `/v1/api/link/generate`.
 - Always send a unique `Idempotency-Key` when generating a payment link. Reusing the same key returns duplicate-request error.
-- Use returned full URL in `data.code` to direct payer to payment flow (`/pay/{code}`).
+- Use returned full URL in `data.code` to direct payer to payment flow (`/{code}`).
 - Some endpoints use `success`, others use `status`; treat either as a boolean flag depending on endpoint.
-- `/pay/{code}` returns HTTP 200 even on failures; check `success` field in response body, not status code only.
+- Payer submits phone number to `/pay/{code}`; check `success` field and `error` message on failures.

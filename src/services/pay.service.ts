@@ -1,7 +1,7 @@
 import initiatePayment from "../apps/servers/create.payment";
 import { prisma } from "../db/prisma";
 
-export async function verifyCode(code: string) {
+async function getValidPaymentByCode(code: string) {
   const payment = await prisma.paymentLink.findUnique({
     where: {
       code: code,
@@ -20,7 +20,32 @@ export async function verifyCode(code: string) {
     };
   }
 
-  const paymentResponse = await initiatePayment(payment);
+  return { success: true, data: payment };
+}
+
+export async function verifyCode(code: string) {
+  const paymentStatus = await getValidPaymentByCode(code);
+
+  if (!paymentStatus.success) {
+    return paymentStatus;
+  }
+
+  return { success: true, data: paymentStatus.data };
+}
+
+export async function payByCode(code: string, phoneNumber: string) {
+  const paymentStatus = await getValidPaymentByCode(code);
+
+  if (!paymentStatus.success) {
+    return paymentStatus;
+  }
+
+  const normalizedPhone = phoneNumber.replace(/\D/g, "");
+  if (normalizedPhone.length < 10 || normalizedPhone.length > 15) {
+    return { success: false, error: "⚠️ Please enter a valid phone number." };
+  }
+
+  const paymentResponse = await initiatePayment(paymentStatus.data, normalizedPhone);
 
   return { success: true, data: paymentResponse };
 }
