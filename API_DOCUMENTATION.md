@@ -178,7 +178,7 @@ or
     "amount": 5000,
     "businessId": "business_uuid",
     "status": "PENDING",
-    "code": "https://mai-link-production.up.railway.app/ABCDEFGH",
+    "code": "ABCDEFGH",
     "idempotencyKey": "client-generated-key",
     "createdAt": "2026-04-15T08:00:00.000Z",
     "updatedAt": "2026-04-15T08:00:00.000Z"
