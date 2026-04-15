@@ -14,7 +14,7 @@ root.use(
   cors({
     origin: [
       "http://localhost:5173",
-      "https://mai-link-app.vercel.app",
+      "https://mailink.maiescrow.com",
       "https://mai-link-production.up.railway.app",
     ],
     allowMethods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
