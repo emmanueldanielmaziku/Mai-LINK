@@ -1,4 +1,16 @@
-# deps
-node_modules/
-.env
 /generated/prisma
+node_modules
+.git
+.gitignore
+.env
+.env.*
+dist
+build
+coverage
+.cache
+.vite
+.cursor
+.cursorignore
+*.log
+.DS_Store
+Mai-LINK-App
