@@ -1,0 +1,210 @@
+{
+  "info": {
+    "_postman_id": "b90d2421-c4e8-4f16-a2d5-2f1456c8be9d",
+    "name": "Mai-LINK API",
+    "description": "Postman collection for Mai-LINK backend integration flow.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Auth - Sign Up",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"business_name\": \"My Shop\",\n  \"business_number\": 123456789,\n  \"business_network\": \"vodacom\",\n  \"business_code\": 1234\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/v1/api/auth/signup",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "v1",
+            "api",
+            "auth",
+            "signup"
+          ]
+        },
+        "description": "Register business and return JWT token."
+      },
+      "response": []
+    },
+    {
+      "name": "Auth - Sign In",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"business_number\": 123456789,\n  \"business_code\": 1234\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/v1/api/auth/signin",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "v1",
+            "api",
+            "auth",
+            "signin"
+          ]
+        },
+        "description": "Authenticate business and return JWT token."
+      },
+      "response": []
+    },
+    {
+      "name": "Link - Generate Payment Link (Protected)",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Idempotency-Key",
+            "value": "{{idempotencyKey}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"amount\": 5000\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/v1/api/link/generate",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "v1",
+            "api",
+            "link",
+            "generate"
+          ]
+        },
+        "description": "Generate payment link URL. Requires JWT and Idempotency-Key."
+      },
+      "response": []
+    },
+    {
+      "name": "Lipa - Add Number",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"lipa_name\": \"Store A\",\n  \"lipa_number\": 123456,\n  \"lipa_network\": \"tigopesa\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/v1/api/lipa",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "v1",
+            "api",
+            "lipa"
+          ]
+        },
+        "description": "Add a new Lipa number."
+      },
+      "response": []
+    },
+    {
+      "name": "Lipa - Get Number Details",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/v1/api/lipa/{{lnumber}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "v1",
+            "api",
+            "lipa",
+            "{{lnumber}}"
+          ]
+        },
+        "description": "Get Lipa number details by number."
+      },
+      "response": []
+    },
+    {
+      "name": "Pay - Verify/Trigger Payment",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/pay/{{code}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "pay",
+            "{{code}}"
+          ]
+        },
+        "description": "Validate payment link code and trigger payment flow."
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://mai-link-production.up.railway.app",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "idempotencyKey",
+      "value": "f5dd2e75-b2ef-4b2a-b29f-42ca3cd4a4f0",
+      "type": "string"
+    },
+    {
+      "key": "lnumber",
+      "value": "123456",
+      "type": "string"
+    },
+    {
+      "key": "code",
+      "value": "ABCDEFGH",
+      "type": "string"
+    }
+  ]
+}
